@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
+import { MemberContext } from "./Members";
 
-type Props = {
-  member: Member,
-  showing: boolean,
-}
-
-type Member = {
-  ref: string,
+export type Member = {
+  dbid: string,
+  session_dbid: string,
   id: number,
   emails: string[],
   name: string,
   status: string,
   team: string,
-  practices: Date[]
+  practices: string[]
 }
 
-export const Member = ({ showing, member: { ref, id, emails, name, status, practices, team } }: Props) => {
+export const Member = () => {
+  const { member } = useContext(MemberContext);
+
+  if (!member) return null
+
+  const { dbid, id, emails, name, status, team, practices } = member
+
   return (
     <div className="w-full h-screen absolute bg-blueGray-700 bg-opacity-50 backdrop-blur-md text-blueGray-300 flex flex-col">
       <div className="flex-grow items-end flex px-6">

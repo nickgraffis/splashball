@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { MemberContext } from "./Members";
 
 type Props = {
-  member: Member,
-  showing: boolean,
+  showing: boolean
 }
 
 type Member = {
@@ -15,13 +15,14 @@ type Member = {
   practices: Date[]
 }
 
-export const Member = ({ showing, member: { ref, id, emails, name, status, practices, team } }: Props) => {
+export const EditMember = ({ showing }: Props) => {
+  const { member } = useContext(MemberContext);
   const [field, setField] = useState('name')
-  const [nameValue, setNameValue] = useState(name)
-  const [emailsValue, setEmailsValue] = useState(emails.join(', '))
-  const [idValue, setIdValue] = useState(id)
-  const [statusValue, setStatusValue] = useState(status)
-  const [teamValue, setTeamValue] = useState(team)
+  const [nameValue, setNameValue] = useState(member?.name || '')
+  const [emailsValue, setEmailsValue] = useState(member?.emails.join(', ') || '')
+  const [idValue, setIdValue] = useState(member?.id || '')
+  const [statusValue, setStatusValue] = useState(member?.status || '')
+  const [teamValue, setTeamValue] = useState(member?.team || '')
 
   const submit = () => {
 
@@ -57,8 +58,10 @@ export const Member = ({ showing, member: { ref, id, emails, name, status, pract
     }
   }
 
+  if (!showing || (!showing && member)) return null
+
   return (
-    <div className="w-full h-screen absolute bg-blueGray-700 bg-opacity-50 backdrop-blur-md text-blueGray-300 flex flex-col">
+    <div className="z-30 w-full h-screen absolute bg-blueGray-700 bg-opacity-50 backdrop-filter backdrop-blur-sm text-blueGray-300 flex flex-col">
       <div className="w-full flex justify-start p-6">
         <span className="font-semibold">Cancel</span>
       </div>
