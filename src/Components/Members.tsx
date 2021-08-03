@@ -10,13 +10,16 @@ import { SimpleDate } from "./SimpleDate";
 
 type MemberContextProps = { 
   member?: Member,
+  setSelectedMember?: (member: Member | undefined) => void,
+  showEditor?: boolean,
+  setShowEditor?: (value: boolean) => void,
   date?: Date
 };
 
 export const MemberContext = React.createContext<Partial<MemberContextProps>>({});
 
 export const Members = () => {
-  const [selectedMember, setSelectedMember] = useState(undefined);
+  const [selectedMember, setSelectedMember] = useState<Member | undefined>(undefined);
   const [date, setDate] = useState(new Date())
   const [showEditor, setShowEditor] = useState(false);
 
@@ -45,28 +48,41 @@ export const Members = () => {
   return (
     <MemberContext.Provider value={{
       member: selectedMember,
+      setSelectedMember,
+      showEditor,
+      setShowEditor,
       date
     }}>
-      <EditMember showing={showEditor} />
+      <EditMember />
       <Member />
-      <NavBar />
-      <div className="w-full h-screen bg-gradient-to-b from-[#201F37] to-[#335575] text-white">
-        <div className="px-6">
-          <div className="w-full text-center font-semibold text-lg py-6 flex justify-between items-center">
-            <div onClick={prevDay} className="p-1 rounded-md active:bg-blueGray-400 active:bg-opacity-25 transition-colors duration-150">
-              <ChevronLeft />
+      <div className="min-h-screen bg-gradient-to-b from-[#201F37] to-[#335575] text-white">
+        <div className="lg:max-w-2xl">
+          <NavBar />
+          <div className="px-6">
+            <div className="w-full text-center font-semibold text-lg py-6 flex justify-between items-center">
+              <button onClick={prevDay}>
+                <ChevronLeft />
+              </button>
+              <SimpleDate date={date} />
+              <button onClick={nextDay}>
+                <ChevronRight />
+              </button>
             </div>
-            <SimpleDate date={date} />
-            <div onClick={nextDay} className="p-1 rounded-md active:bg-blueGray-400 active:bg-opacity-25 transition-colors duration-150">
-              <ChevronRight />
+            <div className="space-y-3">
+              {
+                (isSuccess && members) && members.filter((m: Member) => (!m.practices || ( m.practices && !m.practices.includes(`${date?.getMonth()}/${date?.getDate()}`))))
+                  .sort((a: Member, b: Member) => (b.practices?.length || 0) > (a.practices?.length || 0))
+                  .map((member: Member, index: number) => (
+                    <MemberCard key={index} member={member} />
+                  ))
+              }
+              {
+                (isSuccess && members) && members.filter((m: Member) => (date && m.practices && m.practices.includes(`${date?.getMonth()}/${date?.getDate()}`)))
+                  .map((member: Member, index: number) => (
+                    <MemberCard key={index} member={member} />
+                  ))
+              }
             </div>
-          </div>
-          <div className="space-y-3">
-            {
-              isSuccess && members.map((member: Member, index: number) => (
-                <MemberCard key={index} member={member} />
-              ))
-            }
           </div>
         </div>
       </div>

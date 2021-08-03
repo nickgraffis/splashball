@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import { MemberContext } from "./Members";
+import { MemberStatusIndicator } from "./MemberStatusIndicator";
+import { StatusSummary } from "./StatusSummary";
 
 export type Member = {
   dbid: string,
@@ -13,15 +15,20 @@ export type Member = {
 }
 
 export const Member = () => {
-  const { member } = useContext(MemberContext);
+  const { member, setSelectedMember } = useContext(MemberContext);
 
   if (!member) return null
 
   const { dbid, id, emails, name, status, team, practices } = member
 
+  const clickAway = (event: any) => {
+    console.log(event.target.id)
+    if (event.target.id === 'wrapper' && setSelectedMember) setSelectedMember(undefined)
+  }
+
   return (
-    <div className="w-full h-screen absolute bg-blueGray-700 bg-opacity-50 backdrop-blur-md text-blueGray-300 flex flex-col">
-      <div className="flex-grow items-end flex px-6">
+    <div onClick={clickAway} className="z-30 w-full h-screen fixed bg-blueGray-700 bg-opacity-50 backdrop-filter backdrop-blur-sm text-blueGray-300 flex flex-col">
+      <div id="wrapper" className="flex-grow items-end flex px-6">
         <div className="w-full self-center bg-white rounded-xl p-4 flex flex-col space-y-2 border-b-[6px] border-cyan-600">
           <div className="w-full flex justify-between items-center">
             <span className="text-2xl font-bold text-blueGray-600">{name}</span>
@@ -46,9 +53,9 @@ export const Member = () => {
             </svg>
             <span>{id}</span>
           </div>
-          <div className="text-blueGray-600 flex space-x-1 items-center">
-            <div className="bg-green-400 w-3 h-3 rounded-full"></div>
-            <span><span className="relative"><span className="w-full absolute h-1 bg-green-400 bottom-0 bg-opacity-100"></span><span className="relative z-10">Paid</span></span>, attended <span className="relative"><span className="w-full absolute h-1 bg-green-400 bottom-0 bg-opacity-100"></span><span className="relative z-10">6</span></span> practices in <span className="relative"><span className="w-full absolute h-1 bg-green-400 bottom-0 bg-opacity-100"></span><span className="relative z-10">August</span></span>.</span>
+          <div className="text-blueGray-600 flex space-x-1 items-start">
+            <MemberStatusIndicator status={status} className="flex-shrink-0"/>
+            <StatusSummary status={status} practices={practices} />
           </div>
         </div>
       </div>

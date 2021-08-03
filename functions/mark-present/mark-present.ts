@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { Call, Client, Function } from 'faunadb';
+import { Call, Client, Collection, Create, Function, Ref } from 'faunadb';
 const { FAUNADB_SERVER_SECRET } = process.env;
 
 const handler: Handler = async (event, context) => {
@@ -20,14 +20,34 @@ const handler: Handler = async (event, context) => {
     body: "Missing body."
   }
 
-  const { id, practices } = JSON.parse(event.body)
+  const { id, practices, member, name, team, status } = JSON.parse(event.body)
   const client = new Client({
     secret: FAUNADB_SERVER_SECRET,
   });
-  
-  const members = await client.query(
-    Call(Function('UpdateMemberSession'), [id, { practices }])
-  );
+
+  let members; 
+
+  if (member) {
+      members = await client.query(
+        Create(
+          Collection("session_members"),
+          {
+            data: {
+              member: Ref(Collection("members"), member),
+              practices: practices || [],
+              team: team || "",
+              name,
+              status: status || ""
+            }
+          }
+        )
+      );
+  } else {
+      members = await client.query(
+        Call(Function('UpdateMemberSession'), [id, { practices }])
+    );
+  }
+
 
   console.log(members)
 

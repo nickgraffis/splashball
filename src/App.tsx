@@ -40,8 +40,7 @@ export const App: FC<Props> = () => {
     }
   })
 
-  return (
-    <div className="w-full h-screen bg-gradient-to-b from-[#201F37] to-[#335575] text-white">
+  return (<>
       { authenticated ?
         <AppContext.Provider value={{
           authenticated: true,
@@ -51,11 +50,8 @@ export const App: FC<Props> = () => {
             <Members />
             <ReactQueryDevtools initialIsOpen={true} />
           </QueryClientProvider>
-        </AppContext.Provider> :
-        <>
-          
-        </>
+        </AppContext.Provider> : <></>
       }
-    </div>
+    </>
   )
 }
