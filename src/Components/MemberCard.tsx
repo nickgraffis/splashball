@@ -47,9 +47,14 @@ export const MemberCard = ({ member }: Props) => {
   const hover = () => {
     setShowOptions(true)
   }
+  const autoClose = () => {
+    setTimeout(() => {
+      setShowOptions(false)
+    }, 3000)
+  }
 
   return (
-    <Swipe onSwipeRight={() => setShowOptions(true)} onSwipeLeft={() => setShowOptions(false)}>
+    <Swipe onSwipeRight={() => { setShowOptions(true); autoClose() }} onSwipeLeft={() => setShowOptions(false)}>
       <div onMouseEnter={() => setShowOptions(true)} onMouseLeave={() => setShowOptions(false)} onClick={markAttendance} className="w-full overflow-hidden rounded-xl bg-blueGray-600 bg-opacity-50 opacity-100 flex items-center transform transition-transform duration-150 active:scale-95 p-4">
         <div className={`text-white flex items-center justify-center flex-shrink-0 overflow-hidden transition-all duration-150 ${showOptions ? 'w-12 pr-4' : 'w-0'}`}>
           <button className="view" onClick={() => setSelectedMember && setSelectedMember(member)}>
