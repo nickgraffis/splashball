@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useContext } from "react"
 import Swipe from "react-easy-swipe"
+import { useSwipeable } from 'react-swipeable';
 import { AppContext } from "../App"
 import { useUpdateMember } from "../MemberQueries"
 import { Check } from "./Icons/Check"
@@ -53,8 +54,16 @@ export const MemberCard = ({ member }: Props) => {
     }, 3000)
   }
 
+  const swipes = useSwipeable({
+    delta: 50,
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false,
+    onSwipedRight: () => { setShowOptions(true); autoClose() },
+    onSwipedLeft: () => { setShowOptions(false) },
+  })
+
   return (
-    <Swipe onSwipeRight={() => { setShowOptions(true); autoClose() }} onSwipeLeft={() => setShowOptions(false)}>
+    <div {...swipes}>
       <div onMouseEnter={() => setShowOptions(true)} onMouseLeave={() => setShowOptions(false)} onClick={markAttendance} className="w-full overflow-hidden rounded-xl bg-blueGray-600 bg-opacity-50 opacity-100 flex items-center transform transition-transform duration-150 active:scale-95 p-4">
         <div className={`text-white flex items-center justify-center flex-shrink-0 overflow-hidden transition-all duration-150 ${showOptions ? 'w-12 pr-4' : 'w-0'}`}>
           <button className="view" onClick={() => setSelectedMember && setSelectedMember(member)}>
@@ -81,6 +90,6 @@ export const MemberCard = ({ member }: Props) => {
           }
         </div>
       </div>
-    </Swipe>
+    </div>
   )
 }

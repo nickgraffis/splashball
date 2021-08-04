@@ -38,7 +38,7 @@ export const Members = () => {
   const [selectedMember, setSelectedMember] = useState<Member | undefined>(undefined);
   const [date, setDate] = useState(new Date())
   const [showEditor, setShowEditor] = useState(false);
-
+  const [filters, setFilters] = useState<string[]>([]);
   const { data: members, isLoading, isError, isSuccess, refetch } = useMembers();
   const reactQuery = useMembers();
 
@@ -80,7 +80,39 @@ export const Members = () => {
         <div className="lg:max-w-2xl">
           <NavBar />
           <div className="px-6">
-            <div className="w-full text-center font-semibold text-lg py-6 flex justify-between items-center">
+            <div className="flex space-x-3 pt-4 pb-2 px-2 overflow-scroll no-scrollbar">
+              <div 
+              onClick={() => filters.includes('10U') ? setFilters((prev: string[]) => prev.filter(e => e !== '10U')) : setFilters((prev: string[]) => [...prev, '10U'])} 
+              className={`${filters.includes('10U') && 'ring ring-offset-2 ring-white ring-offset-blueGray-600'} bg-rose-400 
+              rounded-lg text-blueGray-800 font-semibold text-xs px-3 py-1 cursor-pointer transform transition-transform 
+              duration-150 active:scale-95`}>
+                10U
+              </div>
+              <div 
+              onClick={() => filters.includes('SplashBall') ? setFilters((prev: string[]) => prev.filter(e => e !== 'SplashBall')) : setFilters((prev: string[]) => [...prev, 'SplashBall'])} 
+              className={`${filters.includes('SplashBall') && 'ring ring-offset-2 ring-white ring-offset-blueGray-600'} bg-purple-400 
+              rounded-lg text-blueGray-800 font-semibold text-xs px-3 py-1 cursor-pointer transform transition-transform 
+              duration-150 active:scale-95`}>
+                SplashBall
+              </div>
+              <div 
+              onClick={() => filters.includes('12U') ? setFilters((prev: string[]) => prev.filter(e => e !== '12U')) : setFilters((prev: string[]) => [...prev, '12U'])} 
+              className={`${filters.includes('12U') && 'ring ring-offset-2 ring-white ring-offset-blueGray-600'} bg-lightBlue-400 
+              rounded-lg text-blueGray-800 font-semibold text-xs px-3 py-1 cursor-pointer transform transition-transform 
+              duration-150 active:scale-95`}>
+                12U
+              </div>
+              {/* <div onClick={() => setFilter('Inactive')} className="bg-cyan-400 rounded-lg text-blueGray-800 font-semibold text-xs px-3 py-1">
+                Inactive
+              </div>
+              <div onClick={() => setFilter('Paid')} className="bg-green-400 rounded-lg text-blueGray-800 font-semibold text-xs px-3 py-1">
+                Paid
+              </div>
+              <div onClick={() => setFilter('UnPaid')} className="bg-yellow-400 rounded-lg text-blueGray-800 font-semibold text-xs px-3 py-1">
+                Unpaid
+              </div> */}
+            </div>
+            <div className="w-full text-center font-semibold text-lg py-4 flex justify-between items-center">
               <button onClick={prevDay}>
                 <ChevronLeft />
               </button>
@@ -98,19 +130,33 @@ export const Members = () => {
                 ))
               }
               {
-                isError && <div onClick={() => refetch()} className="w-full overflow-hidden rounded-xl bg-red-600 bg-opacity-50 opacity-100 flex items-center p-4 cursor-pointer active:scale-90 transform transition-transform duration-150 ease-in-out">
+                isError && <div onClick={() => refetch()} className="w-full overflow-hidden rounded-xl bg-red-400 bg-opacity-50 opacity-100 flex items-center p-4 cursor-pointer active:scale-90 transform transition-transform duration-150 ease-in-out">
                     <p className="text-white font-semibold text-center w-full">There was an error. Try again.</p>
                   </div>
               }
               {
-                (isSuccess && members) && members.filter((m: Member) => (!m.practices || ( m.practices && !m.practices.includes(`${date?.getMonth()}/${date?.getDate()}`))))
+                (isSuccess && members) && members
+                  .filter((m: Member) => {
+                    if (!filters.length) return true
+                    let checks: boolean[] = [];
+                    filters.forEach(filter => m.team === filter ? checks.push(true) : checks.push(false));
+                    return checks.some(e => e === true);
+                  })
+                  .filter((m: Member) => (!m.practices || ( m.practices && !m.practices.includes(`${date?.getMonth()}/${date?.getDate()}`))))
                   .sort((a: Member, b: Member) => (b.practices?.length || 0) > (a.practices?.length || 0))
                   .map((member: Member, index: number) => (
                     <MemberCard key={index} member={member} />
                   ))
               }
               {
-                (isSuccess && members) && members.filter((m: Member) => (date && m.practices && m.practices.includes(`${date?.getMonth()}/${date?.getDate()}`)))
+                (isSuccess && members) && members
+                  .filter((m: Member) => {
+                    if (!filters.length) return true
+                    let checks: boolean[] = [];
+                    filters.forEach(filter => m.team === filter ? checks.push(true) : checks.push(false));
+                    return checks.some(e => e === true);
+                  })
+                  .filter((m: Member) => (date && m.practices && m.practices.includes(`${date?.getMonth()}/${date?.getDate()}`)))
                   .map((member: Member, index: number) => (
                     <MemberCard key={index} member={member} />
                   ))
