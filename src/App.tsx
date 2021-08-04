@@ -18,7 +18,7 @@ export const App: FC<Props> = () => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    netlifyIdentity.init();
+    netlifyIdentity.init({});
     if (netlifyIdentity.currentUser()) {
       setAuthenticated(true)
       netlifyIdentity.close()
