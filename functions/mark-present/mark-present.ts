@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { Call, Client, Collection, Create, Function, Ref } from 'faunadb';
+import { Call, Client, Collection, Create, Function, Ref, Update } from 'faunadb';
 const { FAUNADB_SERVER_SECRET } = process.env;
 
 const handler: Handler = async (event, context) => {
@@ -20,14 +20,26 @@ const handler: Handler = async (event, context) => {
     body: "Missing body."
   }
 
-  const { id, practices, member, name, team, status } = JSON.parse(event.body)
+  const { id, practices, member, name, team, status, caId } = JSON.parse(event.body)
   const client = new Client({
     secret: FAUNADB_SERVER_SECRET,
   });
 
   let members; 
+  let rawMembers;
+  if ((name || caId) && member) {
+    rawMembers = await client.query(
+      Update(Ref(Collection("members"), member), {
+        data: {
+          ...(name) && { name },
+          ...(team) && { team },
+          ...(caId) && { id: caId },
+        }
+      })
+    )
+  }
 
-  if (member) {
+  if (member && !id) {
       members = await client.query(
         Create(
           Collection("session_members"),
@@ -42,6 +54,15 @@ const handler: Handler = async (event, context) => {
           }
         )
       );
+  } else if ((!member && !practices) || (member && id)) {
+      members = await client.query(
+        Update(Ref(Collection("session_members"), id), {
+          data: {
+            ...(status) && { status },
+            ...(team) && { team }
+          }
+        })
+      )    
   } else {
       members = await client.query(
         Call(Function('UpdateMemberSession'), [id, { practices }])

@@ -31,7 +31,7 @@ const handler: Handler = async (event, context) => {
       {
         data: {
           name, id,
-          emails: emails.split(","),
+          emails: emails ? emails.split(",") : [],
           ...(team) && { team }
         }
       }

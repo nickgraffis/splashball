@@ -61,7 +61,7 @@ export const MemberCard = ({ member }: Props) => {
             <span className="truncate">{name}</span>
             <div className="flex space-x-1">
               <MemberStatusIndicator status={status} />
-              { (!emails?.length || !id) && <MemberStatusIndicator status="no-info" /> }  
+              { !(emails && emails.length && id) && <MemberStatusIndicator status="no-info" /> }  
             </div>
           </div>
           <p className="text-blueGray-400">{team}</p>

@@ -1,15 +1,16 @@
 import React from "react"
 import { useContext } from "react"
 import { AppContext } from "../App"
+import { useUpdateMember } from "../MemberQueries"
+import { MemberContext } from "./Members"
 
-type Props = {
-  status: string,
-  practices: string[]
-}
-
-export const StatusSummary = ({ status, practices }: Props) => {
+export const StatusSummary = () => {
   const { session } = useContext(AppContext)
-  
+  const { member } = useContext(MemberContext)
+  if (!member) return null
+  const { status, practices, dbid, session_dbid } = member
+  const updateMember = useUpdateMember(dbid)
+
   const determineStatus = () => {
     switch (status) {
       case "Paid":
@@ -30,11 +31,18 @@ export const StatusSummary = ({ status, practices }: Props) => {
     </span>
   }
 
+  const changeStatus = () => {
+    updateMember.mutate({
+      id: session_dbid,
+      status: status === "Paid" ? "Unpaid" : "Paid"
+    })
+  }
+
   return (
     <span>
       <span className="relative">
         {underline()}
-        <span className="relative z-10">
+        <span onClick={changeStatus} className="cursor-pointer inline-block relative z-10 transform transition-transform duration-150 active:scale-95">
           {status || "Inactive"}
         </span>
       </span>

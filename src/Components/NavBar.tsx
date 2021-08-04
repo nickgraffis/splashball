@@ -11,7 +11,7 @@ export const NavBar = () => {
   const { showEditor, setShowEditor } = useContext(MemberContext);
 
   return (
-    <div className="flex justify-between p-6 border-b-2 backdrop-blur-lg backdrop-filter border-blueGray-600 sticky top-0">
+    <div className="flex z-30 justify-between p-6 border-b-2 backdrop-blur-lg backdrop-filter border-blueGray-600 sticky top-0">
       <div className="flex space-x-2 items-center">
         <span className="font-bold text-2xl">{session}</span>
         <ChevronDown />

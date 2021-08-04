@@ -10,13 +10,28 @@ import { SimpleDate } from "./SimpleDate";
 
 type MemberContextProps = { 
   member?: Member,
-  setSelectedMember?: (member: Member | undefined) => void,
-  showEditor?: boolean,
-  setShowEditor?: (value: boolean) => void,
-  date?: Date
+  setSelectedMember: (member: Member | undefined) => void,
+  showEditor: boolean,
+  setShowEditor: (value: boolean) => void,
+  date: Date
 };
 
-export const MemberContext = React.createContext<Partial<MemberContextProps>>({});
+export const MemberContext = React.createContext<MemberContextProps>({
+  member: {
+    id: 1,
+    dbid: "",
+    session_dbid: "",
+    emails: [],
+    name: "",
+    status: "",
+    team: "",
+    practices: []
+  },
+  date: new Date(),
+  showEditor: false,
+  setShowEditor: () => {},
+  setSelectedMember: () => {}
+});
 
 export const Members = () => {
   const [selectedMember, setSelectedMember] = useState<Member | undefined>(undefined);
@@ -55,7 +70,7 @@ export const Members = () => {
     }}>
       <EditMember />
       <Member />
-      <div className="min-h-screen bg-gradient-to-b from-[#201F37] to-[#335575] text-white">
+      <div className="min-h-screen bg-gradient-to-b from-[#201F37] to-[#335575] text-white pb-4">
         <div className="lg:max-w-2xl">
           <NavBar />
           <div className="px-6">
