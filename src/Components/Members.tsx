@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useMembers } from "../MemberQueries";
 import { EditMember } from "./EditMember";
 import { ChevronLeft } from "./Icons/ChevronLeft";
@@ -38,7 +39,12 @@ export const Members = () => {
   const [date, setDate] = useState(new Date())
   const [showEditor, setShowEditor] = useState(false);
 
-  const { data: members, isLoading, isError, isSuccess } = useMembers();
+  const { data: members, isLoading, isError, isSuccess, refetch } = useMembers();
+  const reactQuery = useMembers();
+
+  useEffect(() => {
+    console.log(reactQuery)
+  }, [reactQuery])
 
   const prevDay = () => {
     setDate(
@@ -84,6 +90,18 @@ export const Members = () => {
               </button>
             </div>
             <div className="space-y-3">
+              {
+                isLoading && new Array(8).fill(0).map((_: any, index: number) => (
+                  <div key={index} className="w-full overflow-hidden rounded-xl bg-blueGray-400 bg-opacity-50 opacity-100 flex items-center p-4 h-4 animate-pulse">
+                    &nbsp;
+                  </div>
+                ))
+              }
+              {
+                isError && <div onClick={() => refetch()} className="w-full overflow-hidden rounded-xl bg-red-600 bg-opacity-50 opacity-100 flex items-center p-4 cursor-pointer active:scale-90 transform transition-transform duration-150 ease-in-out">
+                    <p className="text-white font-semibold text-center w-full">There was an error. Try again.</p>
+                  </div>
+              }
               {
                 (isSuccess && members) && members.filter((m: Member) => (!m.practices || ( m.practices && !m.practices.includes(`${date?.getMonth()}/${date?.getDate()}`))))
                   .sort((a: Member, b: Member) => (b.practices?.length || 0) > (a.practices?.length || 0))

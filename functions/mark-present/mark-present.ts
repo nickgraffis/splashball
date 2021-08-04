@@ -27,7 +27,7 @@ const handler: Handler = async (event, context) => {
 
   let members; 
   let rawMembers;
-  if ((name || caId) && member) {
+  if ((name || caId) && member && !practices) {
     rawMembers = await client.query(
       Update(Ref(Collection("members"), member), {
         data: {

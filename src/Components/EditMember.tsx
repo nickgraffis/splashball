@@ -29,6 +29,10 @@ export const EditMember = () => {
       id: idValue,
       team: teamValue
     })
+    setNameValue('')
+    setEmailsValue('')
+    setIdValue('')
+    setTeamValue('')
   }
 
   const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -99,9 +103,9 @@ export const EditMember = () => {
   }
 
   return (
-    <div className="z-30 w-full h-screen fixed bg-blueGray-700 bg-opacity-50 backdrop-filter backdrop-blur-sm text-blueGray-300 flex flex-col">
+    <div className="z-40 w-full h-screen fixed bg-blueGray-700 bg-opacity-50 backdrop-filter backdrop-blur-sm text-blueGray-300 flex flex-col">
       <div className="w-full flex justify-start p-6">
-        <span onClick={() => setShowEditor && setShowEditor(false)} className="font-semibold">Cancel</span>
+        <button onClick={() => setShowEditor && setShowEditor(false)} className="font-semibold">Cancel</button>
       </div>
       <div className="flex-grow items-end flex px-6">
         <div className="w-full self-center bg-white rounded-xl p-4 flex flex-col space-y-2 border-b-[6px] border-cyan-600">

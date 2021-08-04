@@ -10,7 +10,10 @@ export const getMembersBySession = (token: string, session: string | undefined) 
 ).then((res) => {
   console.log(res);
   return res.data.data;
-}).catch(err => console.log(err))
+}).catch(err => {
+  console.log(err.response.data);
+  throw new Error(err.response.data);
+})
 
 export const updateMemberSession = (token: string, values: any) => axios.post(
   `/api/mark-present`,
