@@ -44,7 +44,7 @@ export const App: FC<Props> = () => {
   })
 
   return (<>
-      { authenticated ?
+      {/* { authenticated ?
         <AppContext.Provider value={{
           authenticated: true,
           session: 'August'
@@ -54,7 +54,7 @@ export const App: FC<Props> = () => {
             <ReactQueryDevtools initialIsOpen={true} />
           </QueryClientProvider>
         </AppContext.Provider> : <Login />
-      }
+      } */}
     </>
   )
 }
