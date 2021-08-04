@@ -91,8 +91,8 @@ export const Members = () => {
             </div>
             <div className="space-y-3">
               {
-                isLoading && new Array(8).fill(0).map((_: any, index: number) => (
-                  <div key={index} className="w-full overflow-hidden rounded-xl bg-blueGray-400 bg-opacity-50 opacity-100 flex items-center p-4 h-4 animate-pulse">
+                isLoading && new Array(4).fill(0).map((_: any, index: number) => (
+                  <div key={index} className="w-full overflow-hidden rounded-xl bg-blueGray-400 bg-opacity-50 opacity-100 flex items-center p-4 h-12 animate-pulse">
                     &nbsp;
                   </div>
                 ))

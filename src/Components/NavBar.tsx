@@ -5,6 +5,7 @@ import { Plus } from "./Icons/Plus";
 import { VerticalDots } from "./Icons/VerticalDots";
 import { ChevronDown } from "./Icons/ChevronDown";
 import { MemberContext } from "./Members";
+import { Logout } from "./Icons/Logout";
 
 export const NavBar = () => {
   const { session } = useContext(AppContext);
@@ -20,14 +21,12 @@ export const NavBar = () => {
         <button onClick={() => setShowEditor && setShowEditor(true)}>
           <Plus />
         </button>
-        <div>
+        <button>
           <VerticalDots />
-        </div>
-        <div onClick={() => netlifyIdentity.logout()}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-          </svg>
-        </div>
+        </button>
+        <button onClick={() => netlifyIdentity.logout()}>
+          <Logout />
+        </button>
       </div>
     </div>
   )

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Members } from './Components/Members';
 import netlifyIdentity from 'netlify-identity-widget'
+import { Login } from './Components/Login';
 
 type Props = { }
 
@@ -25,9 +26,11 @@ export const App: FC<Props> = () => {
     else netlifyIdentity.open()
     netlifyIdentity.on('login', () => {
       setAuthenticated(true);
+      netlifyIdentity.close()
     });
     netlifyIdentity.on('logout', () => {
       setAuthenticated(false);
+      netlifyIdentity.open()
     });
   }, []);
 
@@ -50,7 +53,7 @@ export const App: FC<Props> = () => {
             <Members />
             <ReactQueryDevtools initialIsOpen={true} />
           </QueryClientProvider>
-        </AppContext.Provider> : <></>
+        </AppContext.Provider> : <Login />
       }
     </>
   )
